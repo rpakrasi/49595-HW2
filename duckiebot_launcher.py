@@ -5,79 +5,67 @@ Starts keyboard_control for duckiebot9.
 Uses the default macOS Terminal application.
 """
 
+import argparse
 import time
-import subprocess
 import sys
 
-import pyautogui
+from duckiebot_control import DuckiebotKeyboardController, DuckiebotTerminalLauncher
 
 DUCKIEBOT_NAME = "duckiebot9"
 GAIN_STEP = 0.1
+MODE_TEST = "test"
+MODE_COMPETITION = "competition"
 
 
-def run_keyboard_control():
-    """
-    Open a new Terminal window and run the keyboard_control command.
-    """
-    apple_script = f"""
-    tell application "Terminal"
-        activate
-        do script "dts duckiebot keyboard_control {DUCKIEBOT_NAME} --browser"
-    end tell
-    """
-    
-    subprocess.run(["osascript", "-e", apple_script], check=True)
-    print(f"\n✓ Keyboard control launched for {DUCKIEBOT_NAME}")
-    print("  Browser should open with the controller interface")
-
-
-def focus_controller_window():
-    """
-    Bring the controller browser window to the front by clicking in it.
-    """
-    time.sleep(3)
-    screen_width, screen_height = pyautogui.size()
-    pyautogui.click(screen_width // 2, screen_height // 2)
-    time.sleep(0.5)
-
-
-def set_gain(target_gain):
-    """
-    Adjust the keyboard controller gain to a target value.
-    The controller changes gain in 0.1 increments with x/z.
-    """
-    current_gain = 0.0
-    steps = round((target_gain - current_gain) / GAIN_STEP)
-
-    if steps > 0:
-        for _ in range(steps):
-            pyautogui.press("x")
-            time.sleep(0.15)
-    elif steps < 0:
-        for _ in range(abs(steps)):
-            pyautogui.press("z")
-            time.sleep(0.15)
-
-
-def drive_forward(duration_seconds):
-    """
-    Hold W to drive forward for a fixed amount of time, then release.
-    """
-    pyautogui.keyDown("w")
-    time.sleep(duration_seconds)
-    pyautogui.keyUp("w")
-
-def main():
-    """Main execution flow."""
+def run_test_mode(launcher, controller):
+    """Current scripted testing flow."""
     print(f"🤖 Duckiebot Launcher - Searching for {DUCKIEBOT_NAME}")
     print("-" * 50)
 
-    run_keyboard_control()
-    focus_controller_window()
-    set_gain(0.1)
-    drive_forward(1)
+    launcher.run_keyboard_control()
+    controller.focus_controller_window()
+    controller.set_gain(0.1)
+    controller.drive_forward(1)
     print("\n✨ Setup complete! Check the Terminal window for the controller.")
+
+
+def run_competition_mode(launcher, controller):
+    """Competition flow with lane-following enabled by default."""
+    print(f"🏁 Competition mode for {DUCKIEBOT_NAME}")
+    print("-" * 50)
+
+    launcher.run_lane_following_demo()
+    time.sleep(1)
+    launcher.run_keyboard_control()
+    controller.focus_controller_window()
+    controller.toggle_autopilot()
+    print("\n✨ Lane following enabled. Voice start/stop can now toggle autopilot.")
+
+
+def parse_args(argv=None):
+    parser = argparse.ArgumentParser(description="Duckiebot launcher")
+    parser.add_argument(
+        "--mode",
+        choices=[MODE_TEST, MODE_COMPETITION],
+        default=MODE_TEST,
+        help="Run mode: test or competition",
+    )
+    return parser.parse_args(argv)
+
+
+def main(argv=None):
+    """Main execution flow."""
+    args = parse_args(argv)
+    launcher = DuckiebotTerminalLauncher(DUCKIEBOT_NAME)
+    controller = DuckiebotKeyboardController(gain_step=GAIN_STEP)
+
+    if args.mode == MODE_COMPETITION:
+        run_competition_mode(launcher, controller)
+    else:
+        run_test_mode(launcher, controller)
+
     return 0
+
 
 if __name__ == "__main__":
     sys.exit(main())
