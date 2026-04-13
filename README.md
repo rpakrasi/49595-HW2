@@ -7,6 +7,8 @@
 - `gpt_microsoft.py`: Sends text prompts to the model and handles model responses.
 - `keys.py`: Stores API keys and endpoint configuration.
 
-By default, `duckiebot_launcher.py` runs in test mode.
-To run competition mode, add the flag: `--mode competition`.
+## Use this for test mode:
+`python gpt_microsoft.py --mode test`
 
+## Use this for competition mode later:
+`python gpt_microsoft.py --mode competition`
