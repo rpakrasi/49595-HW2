@@ -42,18 +42,26 @@ class DuckiebotKeyboardController:
 
     def __init__(self, gain_step=0.1):
         self.gain_step = gain_step
+        self._window_focused = False
+
+    def _ensure_controller_window_focus(self):
+        if not self._window_focused:
+            self.focus_controller_window()
 
     def focus_controller_window(self, wait_seconds=3):
         time.sleep(wait_seconds)
         screen_width, screen_height = pyautogui.size()
         pyautogui.click(screen_width // 2, screen_height // 2)
         time.sleep(0.5)
+        self._window_focused = True
 
     def press_key(self, key_name, duration_seconds=0.15):
+        self._ensure_controller_window_focus()
         pyautogui.press(key_name)
         time.sleep(duration_seconds)
 
     def set_gain(self, target_gain, current_gain=0.0):
+        self._ensure_controller_window_focus()
         steps = round((target_gain - current_gain) / self.gain_step)
 
         if steps > 0:
@@ -66,21 +74,25 @@ class DuckiebotKeyboardController:
                 time.sleep(0.15)
 
     def turn_left(self, duration_seconds):
+        self._ensure_controller_window_focus()
         pyautogui.keyDown("a")
         time.sleep(duration_seconds)
         pyautogui.keyUp("a")
 
     def turn_right(self, duration_seconds):
+        self._ensure_controller_window_focus()
         pyautogui.keyDown("d")
         time.sleep(duration_seconds)
         pyautogui.keyUp("d")
 
     def drive_forward(self, duration_seconds):
+        self._ensure_controller_window_focus()
         pyautogui.keyDown("w")
         time.sleep(duration_seconds)
         pyautogui.keyUp("w")
 
     def drive_backward(self, duration_seconds):
+        self._ensure_controller_window_focus()
         pyautogui.keyDown("s")
         time.sleep(duration_seconds)
         pyautogui.keyUp("s")

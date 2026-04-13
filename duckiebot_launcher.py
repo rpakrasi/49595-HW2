@@ -35,7 +35,12 @@ def run_competition_mode(launcher, controller):
     print("-" * 50)
 
     launcher.run_lane_following_demo()
-    time.sleep(1)
+    print("\nWaiting for lane-following demo to be fully ready...")
+    try:
+        input("Press Enter when lane-following is up, then keyboard control will launch: ")
+    except EOFError:
+        # Fallback for non-interactive runs.
+        time.sleep(8)
     launcher.run_keyboard_control()
     controller.focus_controller_window()
     controller.toggle_autopilot()
