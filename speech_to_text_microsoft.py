@@ -15,6 +15,11 @@ utterance_fragments = []
 stop_speech_recognition = False
 done = False
 
+
+def process_utterance(utterance):
+    # This default callback is replaced by the caller (for example, gpt_microsoft).
+    print(utterance)
+
 def handle_final_result(evt):
     response = "".join([i if ord(i)<128 else " " for i in evt.result.text])
     utterance_fragments.append(response)

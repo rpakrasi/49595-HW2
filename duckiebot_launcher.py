@@ -42,6 +42,14 @@ def run_competition_mode(launcher, controller):
     print("\n✨ Lane following enabled. Voice start/stop can now toggle autopilot.")
 
 
+def run_mode(mode, launcher, controller):
+    """Run the requested launcher mode with shared orchestration logic."""
+    if mode == MODE_COMPETITION:
+        run_competition_mode(launcher, controller)
+    else:
+        run_test_mode(launcher, controller)
+
+
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(description="Duckiebot launcher")
     parser.add_argument(
@@ -59,10 +67,7 @@ def main(argv=None):
     launcher = DuckiebotTerminalLauncher(DUCKIEBOT_NAME)
     controller = DuckiebotKeyboardController(gain_step=GAIN_STEP)
 
-    if args.mode == MODE_COMPETITION:
-        run_competition_mode(launcher, controller)
-    else:
-        run_test_mode(launcher, controller)
+    run_mode(args.mode, launcher, controller)
 
     return 0
 
