@@ -24,8 +24,6 @@ def run_test_mode(launcher, controller):
 
     launcher.run_keyboard_control()
     controller.focus_controller_window()
-    controller.set_gain(0.1)
-    controller.drive_forward(1)
     print("\n✨ Setup complete! Check the Terminal window for the controller.")
 
 
