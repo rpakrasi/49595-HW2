@@ -33,10 +33,14 @@ Return ONLY valid JSON with this schema:
 Allowed actions:
 - toggle_autopilot
 - emergency_stop
-- drive_forward
-- drive_backward
-- turn_left
-- turn_right
+- drive_forward (continuous until release_forward)
+- drive_backward (continuous until release_backward)
+- turn_left (continuous until release_left)
+- turn_right (continuous until release_right)
+- release_forward
+- release_backward
+- release_left
+- release_right
 - increase_trim
 - decrease_trim
 - save_gain_and_trim
@@ -44,8 +48,10 @@ Allowed actions:
 - none
 
 Rules:
-- Use duration only for drive/turn actions.
+- For drive/turn: use duration=null to start continuous motion, use release_* actions to stop.
 - Use target_gain only for set_gain.
+- "go forward" = drive_forward with duration:null.
+- "stop" = release_forward, release_backward, release_left, release_right as appropriate.
 - If unsure, return {"action":"none","duration":null,"target_gain":null}.
 """
 
@@ -85,14 +91,22 @@ def execute_intent(intent):
         controller.toggle_autopilot()
     elif action == "emergency_stop":
         controller.emergency_stop()
-    elif action == "drive_forward" and duration is not None:
-        controller.drive_forward(float(duration))
-    elif action == "drive_backward" and duration is not None:
-        controller.drive_backward(float(duration))
-    elif action == "turn_left" and duration is not None:
-        controller.turn_left(float(duration))
-    elif action == "turn_right" and duration is not None:
-        controller.turn_right(float(duration))
+    elif action == "drive_forward":
+        controller.drive_forward(duration)  # None for continuous, float for duration
+    elif action == "drive_backward":
+        controller.drive_backward(duration)
+    elif action == "turn_left":
+        controller.turn_left(duration)
+    elif action == "turn_right":
+        controller.turn_right(duration)
+    elif action == "release_forward":
+        controller.release_forward()
+    elif action == "release_backward":
+        controller.release_backward()
+    elif action == "release_left":
+        controller.release_left()
+    elif action == "release_right":
+        controller.release_right()
     elif action == "increase_trim":
         controller.increase_trim()
     elif action == "decrease_trim":
