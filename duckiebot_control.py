@@ -111,3 +111,4 @@ class DuckiebotKeyboardController:
 
     def emergency_stop(self):
         self.press_key("e")
+        self.press_key("e")
