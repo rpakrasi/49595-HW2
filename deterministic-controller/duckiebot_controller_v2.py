@@ -16,16 +16,15 @@ class DuckiebotKeyboardControllerV2:
         self._turn_long_curve("d")
 
     def circle(self, key):
-        # TODO go in a circle with 55cm radius
         self._release_all()
         self.set_gain(0.4)
         pyautogui.keyDown("w")
         print("Moving in circles.")
-        for _ in range(18):  # TODO adjust
+        for _ in range(18):  # TODO adjust to go in a circle with 55cm radius
             pyautogui.keyDown(key)
-            time.sleep(0.4)  # TODO adjust
+            time.sleep(0.4)  # TODO adjust to go in a circle with 55cm radius
             pyautogui.keyUp(key)
-            time.sleep(0.7)  # TODO adjust
+            time.sleep(0.7)  # TODO adjust to go in a circle with 55cm radius
 
     def turn_left(self):
         self._turn_short_curve("a")
@@ -65,22 +64,20 @@ class DuckiebotKeyboardControllerV2:
             pyautogui.keyUp(key)
 
     def _turn_long_curve(self, key):
-        # TODO should be 90 degrees
         self._release_all()
         self.set_gain(0.4)
         pyautogui.keyDown("w")
         pyautogui.keyDown(key)
-        time.sleep(0.9)
+        time.sleep(0.9) # TODO adjust this to make it 90 degrees
         pyautogui.keyUp(key)
         print("Turning long curve.")
 
     def _turn_short_curve(self, key):
-        # TODO should be 45 degrees
         self._release_all()
         self.set_gain(0.4)
         pyautogui.keyDown("w")
         pyautogui.keyDown(key)
-        time.sleep(0.45)
+        time.sleep(0.45) # TODO adjust this to make it 45 degrees
         pyautogui.keyUp(key)
         print("Turning short curve.")
 
