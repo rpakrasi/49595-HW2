@@ -1,8 +1,10 @@
+import argparse
 import signal
 import time
 
 import speech_to_text_microsoft
 from duckiebot_controller_v2 import DuckiebotKeyboardControllerV2
+from terminal_launchers import DuckiebotTerminalLauncher
 
 gain = 0.1
 controller = DuckiebotKeyboardControllerV2(gain=gain)
@@ -13,18 +15,24 @@ def execute_intent(intent: str):
     intent = intent.lower()
     if "stop" in intent:
         controller.emergency_stop()
+    elif "autopilot" in intent or "auto pilot" in intent:
+        controller.toggle_autopilot()
+    elif "left short" in intent:
+        controller.turn_left(0.45)
+    elif "right short" in intent:
+        controller.turn_right(0.45)
+    elif "left long" in intent:
+        controller.turn_left(0.9)
+    elif "right long" in intent:
+        controller.turn_right(0.9)
     elif "straight" in intent or "forward" in intent:
         controller.drive_forward()
     elif "backward" in intent:
         controller.drive_backward()
-    elif "left short" in intent:
-        controller.turn_left()
-    elif "right short" in intent:
-        controller.turn_right()
     elif "turn left" in intent:
-        controller.turn_left_long_curve()
+        controller.turn_and_keep_moving("a")
     elif "turn right" in intent:
-        controller.turn_right_long_curve()
+        controller.turn_and_keep_moving("d")
     elif "left circle" in intent:
         controller.circle("a")
     elif "right circle" in intent:
@@ -58,9 +66,25 @@ def process_utterance(said):
         execute_intent(said)
 
 
+def parse_args(argv=None):
+    parser = argparse.ArgumentParser(description="Duckiebot Voice Controller")
+    parser.add_argument(
+        "--launch_keyboard",
+        action="store_true",
+        help="Launch the keyboard control interface before starting voice control",
+    )
+    return parser.parse_args(argv)
+
+
 def main():
     global done
     done = False
+
+    args = parse_args()
+
+    if args.launch_keyboard:
+        launcher = DuckiebotTerminalLauncher()
+        launcher.launch_all()
 
     def signal_handler(sig, frame):
         global done
