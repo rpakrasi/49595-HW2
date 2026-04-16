@@ -17,14 +17,14 @@ def execute_intent(intent: str):
         controller.drive_forward()
     elif "backward" in intent:
         controller.drive_backward()
+    elif "left short" in intent:
+        controller.turn_left()
+    elif "right short" in intent:
+        controller.turn_right()
     elif "turn left" in intent:
         controller.turn_left_long_curve()
     elif "turn right" in intent:
         controller.turn_right_long_curve()
-    elif "turn left short" in intent:
-        controller.turn_left()
-    elif "turn right short" in intent:
-        controller.turn_right()
     elif "left circle" in intent:
         controller.circle("a")
     elif "right circle" in intent:

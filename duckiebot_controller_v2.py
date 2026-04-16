@@ -65,20 +65,22 @@ class DuckiebotKeyboardControllerV2:
 
     def _turn_long_curve(self, key):
         self._release_all()
-        self.set_gain(0.4)
+        self.set_gain(0.2)
         pyautogui.keyDown("w")
-        pyautogui.keyDown(key)
-        time.sleep(0.9) # TODO adjust this to make it 90 degrees
-        pyautogui.keyUp(key)
         print("Turning long curve.")
+        pyautogui.keyDown(key)
+        time.sleep(1.3) # TODO adjust this to make it 90 degrees
+        pyautogui.keyUp(key)
+        
 
     def _turn_short_curve(self, key):
         self._release_all()
-        self.set_gain(0.4)
+        self.set_gain(0.2)
         pyautogui.keyDown("w")
         pyautogui.keyDown(key)
-        time.sleep(0.45) # TODO adjust this to make it 45 degrees
+        time.sleep(0.5) # TODO adjust this to make it 45 degrees
         pyautogui.keyUp(key)
+        pyautogui.keyUp("w")
         print("Turning short curve.")
 
     def turn_tiny(self, key):
