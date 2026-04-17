@@ -17,7 +17,7 @@
 If you want the program to launch the keyboard control browser beforehand:
 `python main.py --launch_keyboard`
 
-If the keyboard browser is already open::
+If the keyboard browser is already open:
 `python main.py`
 
 ### Step 3: Controlling the bot
